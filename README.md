@@ -10,15 +10,31 @@ How to setup your raspberry pi for ship SNMP data
 - snmpd (server)
 
 ## Commands
-1. Run these commands:
+1. SSH in to your RPI, in this example the IP is 192.168.10.129
     ```
     ssh pi@192.168.10.129
+    ```
+1. Install needed software:
+    ```
     sudo su -
     apt-get update
     apt-get install snmp snmpd snmp-mibs-downloader -y
+    ```
+1. Configure SNMP client:
+    ```
     sed -i "s/mibs :/#mibs :/1" /etc/snmp/snmp.conf
+    ```
+1. Install scripts needed for SNMP:
+    ```
     wget -O /usr/local/bin/distro https://gitlab.com/observium/distroscript/raw/master/distro
     chmod +x /usr/local/bin/distro
+    cat <<EOF >> /usr/local/bin/cputemp
+    #!/bin/bash
+    cpu=$(</sys/class/thermal/thermal_zone0/temp)
+    echo print $cpu/1000 | /usr/bin/perl
+    echo
+    EOF
+    chmod +x /usr/local/bin/cputemp
     ```
 1. Configure snmpd:
     ```
@@ -56,8 +72,11 @@ How to setup your raspberry pi for ship SNMP data
     view systemonly included .1.3.6.1.4.1.8072.1.3.2
     ```
 1. Save and exit vim
-1. Start up the snmpd daemon:
+1. Restart the snmpd daemon with the new configuration:
     ```
-    service snmpd start
+    service snmpd restart
     ```
-1. Check SNMP:
+1. Check SNMP (change the IP to your RPI):
+    ```
+    snmpwalk -v2c -c  public 192.168.10.129 .1.3.6.1.4.1.2021.7890.1
+    ```
