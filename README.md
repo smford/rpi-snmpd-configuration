@@ -52,7 +52,7 @@ How to setup your raspberry pi for ship SNMP data
     sysLocation    Sitting on the Dock of the Bay
     sysContact     Me <me@example.org>
     ```
-1. Comment out the below line because it is too restrictive:
+1. Comment out the below line because it is too restrictive, we will add a line granting access later:
     ```
     view   systemonly  included   .1.3.6.1.2.1.1
     ```
