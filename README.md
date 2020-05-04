@@ -80,3 +80,6 @@ How to setup your raspberry pi for ship SNMP data
     ```
     snmpwalk -v2c -c  public 192.168.10.129 .1.3.6.1.4.1.2021.7890.1
     ```
+
+## References
+[snmp temp oid example](https://www.reddit.com/r/PFSENSE/comments/cnjddc/howto_retrieve_cpu_temp_and_other_data_over_snmp/)
