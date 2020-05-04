@@ -95,11 +95,12 @@ Follow these steps and it will work for you.
 1. Check SNMP (change the IP to your RPI):
     ```
     # display distro information
-    snmpwalk -v2c -c  public 192.168.10.129 .1.3.6.1.4.1.2021.7890.1
+    snmpwalk -v2c -c public 192.168.10.129 .1.3.6.1.4.1.2021.7890.1
 
     # display system temp
-    snmpwalk -v2c -c  public 192.168.10.129 .1.3.6.1.4.1.8072.1.3.2.3.1.1.8.99.112.117.84.101.109.112.48
+    snmpwalk -v2c -c public 192.168.10.129 .1.3.6.1.4.1.8072.1.3.2.3.1.1.8.99.112.117.84.101.109.112.48
     ```
 
 ## References
-[snmp temp oid example](https://www.reddit.com/r/PFSENSE/comments/cnjddc/howto_retrieve_cpu_temp_and_other_data_over_snmp/)
+- [snmp temp oid example](https://www.reddit.com/r/PFSENSE/comments/cnjddc/howto_retrieve_cpu_temp_and_other_data_over_snmp/)
+- [pass example with temp](http://www.satsignal.eu/raspberry-pi/monitoring.html)
