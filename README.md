@@ -39,36 +39,48 @@ How to setup your raspberry pi for ship SNMP data
     ```
     vim /etc/snmp/snmpd.conf
     ```
-1. Comment out this line:
+1. Comment out the below line which restricts snmp to local system only:
     ```
     agentAddress  udp:127.0.0.1:161
     ```
-1. Uncomment this line:
+1. Uncomment this line to allow other machines to connect to the snmp daemon on this server:
     ```
     agentAddress udp:161,udp6:[::1]:161
     ```
-1. Change the following lines to your details:
+1. Change the following lines to whatever you need:
     ```
     sysLocation    Sitting on the Dock of the Bay
     sysContact     Me <me@example.org>
     ```
-1. Comment out:
+1. Comment out the below line because it is too restrictive:
     ```
     view   systemonly  included   .1.3.6.1.2.1.1
     ```
-1. Comment out:
+1. Comment out the below two lines because we don't need this junk:
     ```
     extend    test1   /bin/echo  Hello, world!
     extend-sh test2   echo Hello, world! ; echo Hi there ; exit 35
     ```
 1. Add the following lines to the bottom of the file:
     ```
+    # disable useless connection logs in /var/log/daemon.log
     dontLogTCPWrappersConnects yes
-    # cpuTemp1 = .1.3.6.1.4.1.8072.1.3.2.3.1.1.8.99.112.117.84.101.109.112.48
+    
+    # add temp information
+    # cpuTemp0 = .1.3.6.1.4.1.8072.1.3.2.3.1.1.8.99.112.117.84.101.109.112.48
+    # cpuTemp1 = .1.3.6.1.4.1.8072.1.3.2.3.1.1.8.99.112.117.84.101.109.112.49
     extend cpuTemp0 /usr/local/bin/cputemp
+    
+    # add distribution information
     extend .1.3.6.1.4.1.2021.7890.1 distro /usr/local/bin/distro
+    
+    # grant access to the right information, by default it is too restrictive
     view systemonly included .1.3.6.1.2
+    
+    # grant access to distro information
     view systemonly included .1.3.6.1.4.1.2021.7890.1
+    
+    # grant access to the temp information
     view systemonly included .1.3.6.1.4.1.8072.1.3.2
     ```
 1. Save and exit vim
