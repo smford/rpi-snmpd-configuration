@@ -8,6 +8,7 @@ How to setup your raspberry pi for ship SNMP data
 - Raspbian 10 Buster Lite (OS)
 - snmp (client)
 - snmpd (server)
+- bc (cli arithmetic tool)
 
 ## Commands
 1. SSH in to your RPI, in this example the IP is 192.168.10.129
@@ -18,7 +19,7 @@ How to setup your raspberry pi for ship SNMP data
     ```
     sudo su -
     apt-get update
-    apt-get install snmp snmpd snmp-mibs-downloader -y
+    apt-get install bc snmp snmpd snmp-mibs-downloader -y
     ```
 1. Configure SNMP client:
     ```
@@ -30,9 +31,7 @@ How to setup your raspberry pi for ship SNMP data
     chmod +x /usr/local/bin/distro
     cat <<EOF >> /usr/local/bin/cputemp
     #!/bin/bash
-    cpu=$(</sys/class/thermal/thermal_zone0/temp)
-    echo print $cpu/1000 | /usr/bin/perl
-    echo
+    bc -l <<< "scale=2; $(cat /sys/class/thermal/thermal_zone0/temp)/1000"
     EOF
     chmod +x /usr/local/bin/cputemp
     ```
@@ -62,10 +61,11 @@ How to setup your raspberry pi for ship SNMP data
     extend    test1   /bin/echo  Hello, world!
     extend-sh test2   echo Hello, world! ; echo Hi there ; exit 35
     ```
-1. Add to the bottom of the file:
+1. Add the following lines to the bottom of the file:
     ```
     dontLogTCPWrappersConnects yes
-    extend cputemp /usr/local/bin/cputemp
+    # cpuTemp1 = .1.3.6.1.4.1.8072.1.3.2.3.1.1.8.99.112.117.84.101.109.112.48
+    extend cpuTemp0 /usr/local/bin/cputemp
     extend .1.3.6.1.4.1.2021.7890.1 distro /usr/local/bin/distro
     view systemonly included .1.3.6.1.2
     view systemonly included .1.3.6.1.4.1.2021.7890.1
@@ -78,7 +78,11 @@ How to setup your raspberry pi for ship SNMP data
     ```
 1. Check SNMP (change the IP to your RPI):
     ```
+    # display distro information
     snmpwalk -v2c -c  public 192.168.10.129 .1.3.6.1.4.1.2021.7890.1
+
+    # display system temp
+    snmpwalk -v2c -c  public 192.168.10.129 .1.3.6.1.4.1.8072.1.3.2.3.1.1.8.99.112.117.84.101.109.112.48
     ```
 
 ## References
