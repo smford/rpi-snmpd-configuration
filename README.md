@@ -1,7 +1,11 @@
 # rpi-snmpd-configuration
-How to setup your raspberry pi for ship SNMP data
+How to setup your raspberry pi for SNMP with the proper information, including temperature, networking and OS details.
 
-## Hardware
+Most other instructions lack details, do not include temperature, networking or OS details.
+
+Follow these steps and it will work for you.
+
+## Tested Hardware
 - Raspberry Pi Zero Wireless
 
 ## Software
